@@ -1,0 +1,7 @@
+const LEVELS = {
+  ROUTINE: "ROUTINE",
+  IMPORTANT: "IMPORTANT",
+  URGENT: "URGENT",
+};
+
+export { LEVELS };
