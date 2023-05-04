@@ -1,21 +1,11 @@
-// import { useState } from "react";
-
-// const defaultFormFields = {
-//   content: "",
-//   title: "",
-// };
-
 const TodoForm = ({
   onSubmitHandler,
   onChangeHandler,
   onResetHandler,
   formFields,
 }) => {
-  // const [fromFields, setFormFields] = useState(defaultFormFields);
   const handleChange = (event) => {
     onChangeHandler(event);
-    // const { name, value } = event.target;
-    // setFormFields({ ...fromFields, [name]: value });
   };
   const handleReset = () => {
     onResetHandler();
@@ -24,7 +14,6 @@ const TodoForm = ({
     e.preventDefault();
     onSubmitHandler();
   };
-  console.log("todoform render");
 
   return (
     <div className="">
