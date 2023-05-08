@@ -1,23 +1,26 @@
 import dayjs from "dayjs";
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  removeTodo,
+  toggleTodoIsDone,
+  updateTodo,
+} from "../store/todos/todos-action.js";
+import { selectTodos } from "../store/todos/todos-selector";
 
 import { LEVELS } from "../constant/Levels.js";
-const Todo = ({
-  todo,
-  index,
-  onDeleteHandler,
-  onIsDoneHandler,
-  onUpdateHandler,
-}) => {
+const Todo = ({ todo, index }) => {
   const [content, setContent] = useState("");
   const [isEditing, setIsEdit] = useState(false);
+  const todos = useSelector(selectTodos);
+  const dispatch = useDispatch();
 
   const handleDelete = () => {
-    onDeleteHandler(todo.createdAt);
+    dispatch(removeTodo(todos, todo));
   };
 
   const handleIsDone = () => {
-    onIsDoneHandler(index);
+    dispatch(toggleTodoIsDone(todos, index));
   };
 
   const handleIsEdit = (value) => {
@@ -27,14 +30,14 @@ const Todo = ({
     }
   };
 
-  const handleUpdate = () => {
-    onUpdateHandler(index, content);
-    setIsEdit(false);
-  };
-
   const handleChange = (event) => {
     const { value } = event.target;
     setContent(value);
+  };
+
+  const handleUpdate = () => {
+    dispatch(updateTodo(todos, index, content));
+    setIsEdit(false);
   };
 
   const getCardTypeClass = (todo) => {
@@ -107,7 +110,7 @@ const Todo = ({
             </p>
           ) : (
             <div className="mb-3">
-              <textarea
+              <input
                 type="text"
                 className="form-control"
                 id="update"

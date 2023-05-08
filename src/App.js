@@ -6,6 +6,9 @@ import "./App.scss";
 
 import dayjs from "dayjs";
 import { LEVELS } from "./constant/Levels.js";
+import { useSelector, useDispatch } from "react-redux";
+import { selectTodos } from "./store/todos/todos-selector";
+import { setTodos, setTodo } from "./store/todos/todos-action.js";
 
 const defaultFormFields = {
   title: "",
@@ -16,19 +19,20 @@ const defaultFormFields = {
 const defaultTodo = {
   title: "BUY A CAKE FOR MOM",
   content: "MOM LOVE HONGYEHCAKE. LET'S BUY ONE",
-  createdAt: 1683122078174,
+  createdAt: dayjs().valueOf(),
   level: LEVELS.ROUTINE,
   isDone: false,
 };
 
 function App() {
   const [formFields, setFormFields] = useState(defaultFormFields);
-  const [todos, setTodos] = useState([]);
+  const todos = useSelector(selectTodos);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const localTodos = JSON.parse(localStorage.getItem("todos"));
-    setTodos((localTodos || []).length ? localTodos : [defaultTodo]);
-  }, []);
+    dispatch(setTodos((localTodos || []).length ? localTodos : [defaultTodo]));
+  }, [dispatch]);
 
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
@@ -45,33 +49,9 @@ function App() {
 
   const handleSubmit = () => {
     if (formFields.title && formFields.content) {
-      setTodos([
-        ...todos,
-        {
-          ...formFields,
-          createdAt: dayjs().valueOf(),
-          isDone: false,
-        },
-      ]);
+      dispatch(setTodo(todos, formFields));
       handleReset();
     }
-  };
-
-  const handleUpdate = (index, content) => {
-    const newTodos = JSON.parse(JSON.stringify(todos));
-    newTodos[index].content = content;
-    setTodos(newTodos);
-  };
-
-  const handleDelete = (createdAt) => {
-    const newTodos = todos.filter((todo) => todo.createdAt !== createdAt);
-    setTodos(newTodos);
-  };
-
-  const handleIsDone = (index) => {
-    const newTodos = JSON.parse(JSON.stringify(todos));
-    newTodos[index].isDone = !newTodos[index].isDone;
-    setTodos(newTodos);
   };
 
   return (
@@ -87,16 +67,7 @@ function App() {
       {todos.length ? (
         <div className="row row-cols-1 row-cols-lg-3">
           {todos.map((todo, index) => {
-            return (
-              <Todo
-                todo={todo}
-                index={index}
-                key={todo.createdAt}
-                onDeleteHandler={handleDelete}
-                onUpdateHandler={handleUpdate}
-                onIsDoneHandler={handleIsDone}
-              />
-            );
+            return <Todo todo={todo} index={index} key={todo.createdAt} />;
           })}
         </div>
       ) : (
