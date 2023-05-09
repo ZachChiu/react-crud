@@ -1,18 +1,35 @@
-const TodoForm = ({
-  onSubmitHandler,
-  onChangeHandler,
-  onResetHandler,
-  formFields,
-}) => {
-  const handleChange = (event) => {
-    onChangeHandler(event);
-  };
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { selectTodos } from "../store/todos/todos-selector";
+import { setTodo } from "../store/todos/todos-action.js";
+import { LEVELS } from "../constant/Levels.js";
+
+const defaultFormFields = {
+  title: "",
+  content: "",
+  level: LEVELS.ROUTINE,
+};
+
+const TodoForm = () => {
+  const dispatch = useDispatch();
+  const todos = useSelector(selectTodos);
+  const [formFields, setFormFields] = useState(defaultFormFields);
+
   const handleReset = () => {
-    onResetHandler();
+    setFormFields(defaultFormFields);
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmitHandler();
+    if (formFields.title && formFields.content) {
+      dispatch(setTodo(todos, formFields));
+      handleReset();
+    }
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormFields({ ...formFields, [name]: value });
   };
 
   return (

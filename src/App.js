@@ -1,20 +1,14 @@
 import TodoForm from "./components/TodoForm.jsx";
 import Todo from "./components/Todo.jsx";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import "./App.scss";
 
 import dayjs from "dayjs";
 import { LEVELS } from "./constant/Levels.js";
 import { useSelector, useDispatch } from "react-redux";
 import { selectTodos } from "./store/todos/todos-selector";
-import { setTodos, setTodo } from "./store/todos/todos-action.js";
-
-const defaultFormFields = {
-  title: "",
-  content: "",
-  level: LEVELS.ROUTINE,
-};
+import { setTodos } from "./store/todos/todos-action.js";
 
 const defaultTodo = {
   title: "BUY A CAKE FOR MOM",
@@ -25,7 +19,6 @@ const defaultTodo = {
 };
 
 function App() {
-  const [formFields, setFormFields] = useState(defaultFormFields);
   const todos = useSelector(selectTodos);
   const dispatch = useDispatch();
 
@@ -38,31 +31,10 @@ function App() {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormFields({ ...formFields, [name]: value });
-  };
-
-  const handleReset = () => {
-    setFormFields(defaultFormFields);
-  };
-
-  const handleSubmit = () => {
-    if (formFields.title && formFields.content) {
-      dispatch(setTodo(todos, formFields));
-      handleReset();
-    }
-  };
-
   return (
     <div className="App container py-5">
       <h1 className="text-center mb-5">REACT TODO LIST</h1>
-      <TodoForm
-        formFields={formFields}
-        onSubmitHandler={handleSubmit}
-        onChangeHandler={handleChange}
-        onResetHandler={handleReset}
-      />
+      <TodoForm />
       <hr className="my-5" />
       {todos.length ? (
         <div className="row row-cols-1 row-cols-lg-3">
