@@ -7,8 +7,7 @@ import "./App.scss";
 import dayjs from "dayjs";
 import { LEVELS } from "./constant/Levels.js";
 import { useSelector, useDispatch } from "react-redux";
-import { selectTodos } from "./store/todos/todos-selector";
-import { setTodos } from "./store/todos/todos-action.js";
+import { setTodos } from "./store/todos/todosSlice.js";
 
 const defaultTodo = {
   title: "BUY A CAKE FOR MOM",
@@ -19,7 +18,7 @@ const defaultTodo = {
 };
 
 function App() {
-  const todos = useSelector(selectTodos);
+  const todos = useSelector((state) => state.todos);
   const dispatch = useDispatch();
 
   useEffect(() => {

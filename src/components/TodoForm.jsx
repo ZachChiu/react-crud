@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { selectTodos } from "../store/todos/todos-selector";
-import { setTodo } from "../store/todos/todos-action.js";
+import { useDispatch } from "react-redux";
+import { setTodo } from "../store/todos/todosSlice.js";
 import { LEVELS } from "../constant/Levels.js";
 
 const defaultFormFields = {
@@ -12,7 +11,6 @@ const defaultFormFields = {
 
 const TodoForm = () => {
   const dispatch = useDispatch();
-  const todos = useSelector(selectTodos);
   const [formFields, setFormFields] = useState(defaultFormFields);
 
   const handleReset = () => {
@@ -22,7 +20,7 @@ const TodoForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formFields.title && formFields.content) {
-      dispatch(setTodo(todos, formFields));
+      dispatch(setTodo(formFields));
       handleReset();
     }
   };

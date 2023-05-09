@@ -1,26 +1,24 @@
 import dayjs from "dayjs";
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   removeTodo,
   toggleTodoIsDone,
   updateTodo,
-} from "../store/todos/todos-action.js";
-import { selectTodos } from "../store/todos/todos-selector";
+} from "../store/todos/todosSlice.js";
 
 import { LEVELS } from "../constant/Levels.js";
 const Todo = ({ todo, index }) => {
   const [content, setContent] = useState("");
   const [isEditing, setIsEdit] = useState(false);
-  const todos = useSelector(selectTodos);
   const dispatch = useDispatch();
 
   const handleDelete = () => {
-    dispatch(removeTodo(todos, todo));
+    dispatch(removeTodo(todo));
   };
 
   const handleIsDone = () => {
-    dispatch(toggleTodoIsDone(todos, index));
+    dispatch(toggleTodoIsDone(index));
   };
 
   const handleIsEdit = (value) => {
@@ -36,7 +34,7 @@ const Todo = ({ todo, index }) => {
   };
 
   const handleUpdate = () => {
-    dispatch(updateTodo(todos, index, content));
+    dispatch(updateTodo({ index, content }));
     setIsEdit(false);
   };
 
